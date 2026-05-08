@@ -205,3 +205,5 @@ class GameState:
     def _check_all_found(self) -> bool:
         """Return True if every region has been found."""
         return all(r["found"] for r in self._regions)
+    
+
