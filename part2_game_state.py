@@ -1,12 +1,17 @@
 """
 HIT137 Assignment 3 - Part 2: Game State Management
-Member 2 Responsibility: GameState class
+
+Written by: Tufayel Ahmed - S397780
+Responsibility: GameState class
+
 Handles all game logic:
-  - Click validation against difference regions
-  - Score tracking (cumulative across images)
-  - Mistake counting and lockout (max 3 per image)
-  - Found/unfound region tracking
-  - Reveal logic
+  - click validation against difference regions
+  - score tracking (cumulative across images)
+  - mistake counting and lockout (max 3 per image)
+  - found/unfound region tracking
+  - reveal logic
+"""
+
 """
 
 
