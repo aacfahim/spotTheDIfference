@@ -12,8 +12,6 @@ Handles all game logic:
   - reveal logic
 """
 
-"""
-
 
 class GameState:
     """
