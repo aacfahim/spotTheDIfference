@@ -1,13 +1,17 @@
 """
 HIT137 Assignment 3 - Part 3: Canvas Rendering
-Member 3 Responsibility: CanvasRenderer class
+
+Written by: Mahinur Rahman - S398451 
+Responsibility: CanvasRenderer class
+
 Handles all visual rendering on Tkinter canvases:
-  1. Displaying original and modified images side by side
-  2. Drawing red circles (found differences) on both canvases
-  3. Drawing blue circles (revealed differences) on both canvases
-  4. Mapping canvas click coordinates to image coordinates
-  5. Refreshing canvases whenever game state changes
+  - displaying original and modified images side by side
+  - drawing red circles (found differences) on both canvases
+  - drawing blue circles (revealed differences) on both canvases
+  - mapping canvas click coordinates to image coordinates
+  - refreshing canvases whenever game state changes
 """
+
 
 import tkinter as tk
 from PIL import Image, ImageTk
