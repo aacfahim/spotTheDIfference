@@ -1,13 +1,16 @@
 """
 HIT137 Assignment 3 - Part 4: Game Controller / GUI
-Member 4 Responsibility: GameController class
+
+Written by: Ahnaf Hasnain Nahiun - S400103
+Responsibility: GameController class
+
 Builds the main Tkinter window and wires everything together:
-  - Toolbar with Load Image and Reveal buttons
-  - Status bar displaying score, mistakes, remaining differences
-  - Pop-up dialogs for completion and lockout events
-  - Delegates image processing to ImageProcessor
-  - Delegates game logic to GameState
-  - Delegates rendering to CanvasRenderer
+  - toolbar with Load Image and Reveal buttons
+  - status bar displaying score, mistakes, remaining differences
+  - popup dialogs for completion and lockout events
+  - delegates image processing to ImageProcessor
+  - delegates game logic to GameState
+  - delegates rendering to CanvasRenderer
 """
 
 import tkinter as tk
