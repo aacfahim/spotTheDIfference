@@ -190,3 +190,143 @@ class GameController:
             bg="#0a0a18",
             fg="#333355",
         ).pack()
+
+    # ------------------------------------------------------------------
+    # Event handlers
+    # ------------------------------------------------------------------
+
+    def _on_load_image(self):
+        """Handle the Load Image button click."""
+        filetypes = [
+            ("Image Files", "*.jpg *.jpeg *.png *.bmp"),
+            ("JPEG", "*.jpg *.jpeg"),
+            ("PNG", "*.png"),
+            ("BMP", "*.bmp"),
+            ("All Files", "*.*"),
+        ]
+        filepath = filedialog.askopenfilename(
+            title="Choose an image",
+            filetypes=filetypes,
+        )
+        if not filepath:
+            return
+
+        success = self.image_processor.load_image(filepath)
+        if not success:
+            messagebox.showerror(
+                "Load Error",
+                f"Could not load the image:\n{filepath}\n\n"
+                "Please choose a valid JPG, PNG, or BMP file.",
+            )
+            return
+
+        # Reset game state for the new image
+        self.game_state.new_image(self.image_processor.get_difference_regions())
+
+        # Enable reveal button and re-render
+        self.btn_reveal.configure(state=tk.NORMAL)
+        self.renderer.render(self.image_processor, self.game_state)
+        self._refresh_status()
+
+    def _on_image_click(self, image_x: int, image_y: int):
+        """
+        Handle a player click on the modified canvas.
+
+        Delegates validation to GameState, then re-renders and updates status.
+
+        Args:
+            image_x (int): X coordinate in image space.
+            image_y (int): Y coordinate in image space.
+        """
+        result = self.game_state.process_click(image_x, image_y)
+
+        # Re-render to show new circles
+        self.renderer.render(self.image_processor, self.game_state)
+        self._refresh_status()
+
+        if result["complete"]:
+            self._show_completion_dialog()
+        elif result["locked"] and result["mistake"]:
+            self._show_locked_dialog()
+
+    def _on_reveal(self):
+        """Handle the Reveal Differences button click."""
+        if self.image_processor.original_rgb is None:
+            return
+
+        self.game_state.reveal_all()
+        self.renderer.render(self.image_processor, self.game_state)
+        self._refresh_status()
+
+        remaining_was = self.game_state.get_remaining()
+        messagebox.showinfo(
+            "Differences Revealed",
+            "All remaining differences have been marked in blue.\n"
+            "Load a new image to continue playing!",
+        )
+
+    # ------------------------------------------------------------------
+    # UI update helpers
+    # ------------------------------------------------------------------
+
+    def _refresh_status(self):
+        """Update all status indicators to reflect current game state."""
+        # Status text
+        self.lbl_status.configure(text=self.game_state.get_status_message())
+
+        # Top-right score
+        self.lbl_score_top.configure(
+            text=f"Total Score: {self.game_state.total_score}"
+        )
+
+        # Mistake dot indicators
+        mistakes = self.game_state.mistakes
+        for i, dot in enumerate(self._mistake_dots):
+            if i < mistakes:
+                dot.configure(text="●", fg="#cc3333")
+            else:
+                dot.configure(text="○", fg="#444466")
+
+        # Colour status label based on state
+        if self.game_state.is_complete:
+            self.lbl_status.configure(fg="#44dd66")
+        elif self.game_state.is_locked:
+            self.lbl_status.configure(fg="#dd4444")
+        else:
+            self.lbl_status.configure(fg="#a0a0cc")
+
+    def _show_completion_dialog(self):
+        """Show a congratulatory pop-up when all differences are found."""
+        messagebox.showinfo(
+            "🎉 Congratulations!",
+            f"You found all {GameState.TOTAL_DIFFERENCES} differences!\n\n"
+            f"Total Score so far: {self.game_state.total_score}\n\n"
+            "Load a new image to keep playing.",
+        )
+
+    def _show_locked_dialog(self):
+        """Show a lockout pop-up when 3 mistakes are reached."""
+        messagebox.showwarning(
+            "❌ Too Many Mistakes",
+            f"You made {GameState.MAX_MISTAKES} mistakes.\n"
+            f"You found {GameState.TOTAL_DIFFERENCES - self.game_state.get_remaining()} "
+            f"of {GameState.TOTAL_DIFFERENCES} differences.\n\n"
+            "No more guesses allowed for this image.\n"
+            "Use the Reveal button or load a new image.",
+        )
+
+    # ------------------------------------------------------------------
+    # Entry point
+    # ------------------------------------------------------------------
+
+    def run(self):
+        """Start the Tkinter main event loop."""
+        # Centre the window on screen
+        self.root.update_idletasks()
+        w = self.root.winfo_width()
+        h = self.root.winfo_height()
+        x = (self.root.winfo_screenwidth() - w) // 2
+        y = (self.root.winfo_screenheight() - h) // 2
+        self.root.geometry(f"+{x}+{y}")
+
+        self.root.mainloop()
