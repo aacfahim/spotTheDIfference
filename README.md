@@ -1,4 +1,3 @@
-<img width="1254" height="767" alt="2026-05-11_17-57-16" src="https://github.com/user-attachments/assets/a3f9a28c-623c-420c-8b34-e455357857a4" /># 🔍 Spot the Difference — HIT137 Group Assignment 3
 
 A desktop game where you find 5 hidden differences between two side-by-side images.  
 Built with **Python**, **OpenCV**, and **Tkinter**.
